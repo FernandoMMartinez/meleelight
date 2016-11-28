@@ -2,7 +2,7 @@
 
 window.creditsPlayer = 0;
 
-const twoPi = Math.pi * 2;
+const twoPi = Math.PI * 2;
 //scrolling top down
 var shoot_cooldown = 0;
 var initc = true; //whether or not credits should be initialized. Should be set to true every time credits is activated
@@ -30,6 +30,9 @@ window.ScrollingText = function(text, yPos, position, information) {
   this.position = position; //position in development
   this.information = information; //more information?
   this.isShot = false; //whether or not it has been shot
+  this.xMax = Math.floor((Math.random() * 150) + 50);
+  this.xVal = 0;
+  this.xDirection = Math.floor(Math.random() + 1);
   this.canRender = false;
   this.size = function() {
     return ([
@@ -59,6 +62,13 @@ window.ScrollingText = function(text, yPos, position, information) {
     }
   }
   this.scrollY = function(y) {
+	if ((this.xVal == this.xMax) && this.xDirection == 1) {
+		this.xDirection = 0;
+	} else if ((this.xVal == -1 * this.xMax) && this.xDirection == 0) {
+		this.xDirection = 1;
+	}
+	this.xPos += -1 + (2 * this.xDirection);
+	this.xVal += -1 + (2 * this.xDirection);
     this.yPos += y;
   }
 }
@@ -107,9 +117,9 @@ window.credits = function(p) { //called once every frame
   }
 
   //l stick to pos
-  cPlayerXPos = Math.round(((cBoundX / 2) + ((player[0].inputs.rawlStickAxis[0].x) * (cBoundX / 2))) - ((cBoundX -
+  cPlayerXPos = Math.round(((cBoundX / 2) + ((player[p].inputs.rawlStickAxis[0].x) * (cBoundX / 2))) - ((cBoundX -
     cXSize) / 2));
-  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * player[0].inputs.rawlStickAxis[0].y) * (cBoundY / 2))) - ((cBoundY -
+  cPlayerYPos = Math.round(((cBoundY / 2) + ((-1 * player[p].inputs.rawlStickAxis[0].y) * (cBoundY / 2))) - ((cBoundY -
     cYSize) / 2));
   //cast positions to canvas size
   if (cPlayerXPos < 0) {

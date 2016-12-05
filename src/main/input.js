@@ -4,7 +4,7 @@ import {
   inverseMatrix,
   multMatVect
 } from "main/linAlg";
-import {Vec2D} from "main/characters";
+import {Vec2D} from "./util/Vec2D";
 
 export const button = {
   "a" : 0, 
@@ -19,7 +19,7 @@ export const button = {
   "dr": 9,  // d-pad right
   "dd": 10, // d-pad down
   "dl": 11  // d-pad left
-}
+};
 
 export const axis = {
   "lsX": 12, // left analog stick left/right
@@ -108,9 +108,11 @@ var controllerIDMap = new Map();
 // ID 0, Mayflash Wii-U adapter & variants
 controllerIDMap.set("Mayflash", 0); // Mayflash 4 port, ID: MAYFLASH GameCube Controller Adapter
 controllerIDMap.set("0079-1843", 0);
+controllerIDMap.set("79-1843", 0);
 
 controllerIDMap.set("NEXILUX", 0); // NEXILUX GAMECUBE Controller Adapter
 controllerIDMap.set("0079-1845", 0);
+controllerIDMap.set("79-1845", 0);
 
 controllerIDMap.set("Wii U GameCube Adapter", 0); // Mayflash 4 port on Linux, no vendor/product ID?
 
@@ -125,6 +127,7 @@ controllerIDMap.set("1234-bead", 1);
 controllerIDMap.set("GC/N64 to USB, v2.", 2);
 controllerIDMap.set("GC/N64 to USB v2.", 2);
 controllerIDMap.set("289b-000c", 2);
+controllerIDMap.set("289b-c", 2);
 
 // ID 3, XBOX 360 or XInput standard gamepad
 controllerIDMap.set("Microsoft Controller", 3); // XBOX 360 & XBOX One controllers
@@ -133,34 +136,42 @@ controllerIDMap.set("Microsoft X-Box One", 3); // ID: Microsoft X-Box One pad
 controllerIDMap.set("XInput", 3);
 controllerIDMap.set("Standard Gamepad", 3);
 controllerIDMap.set("045e-02d1", 3);
+controllerIDMap.set("45e-2d1", 3);
 
 controllerIDMap.set("Wireless 360 Controller", 3); // XBOX 360 controller on Mac
 controllerIDMap.set("045e-028e", 3);
+controllerIDMap.set("45e-28e", 3);
 
 // ID 4, TigerGame 3-in-1 adapter
 controllerIDMap.set("TigerGame", 4); // ID: TigerGame XBOX+PS2+GC Game Controller Adapter
 controllerIDMap.set("0926-2526", 4);
+controllerIDMap.set("926-2526", 4);
 
 // ID 5, Retrolink adapter
 controllerIDMap.set("Generic USB Joystick", 5); // ID: Generic USB Joystick, TODO: should check ID and vendor...
 controllerIDMap.set("0079-0006", 5);
+controllerIDMap.set("79-6", 5);
 
 // ID 6, raphnet n64 adapter, version 3.0 and above
 controllerIDMap.set("GC/N64 to USB v3.", 6); // "v3.2" and "v3.3"
 controllerIDMap.set("GC/N64 to USB, v3.", 6);
 controllerIDMap.set("289b-001d", 6);
+controllerIDMap.set("289b-1d", 6);
 
 // ID 7, Brook adapter
 controllerIDMap.set("Wii U GameCube Controller Adapter", 7);
 controllerIDMap.set("0e8f-0003", 7);
+controllerIDMap.set("e8f-3", 7);
 
 // ID 8, PS4 controller
 controllerIDMap.set("Wireless Controller", 8); // should check ID and vendor...
 controllerIDMap.set("054c-05c4", 8);
+controllerIDMap.set("54c-5c4", 8);
 
 // ID 9, Rock Candy Xbox 360 controller
 controllerIDMap.set("Performance Designed Products Rock Candy Gamepad for Xbox 360", 8);
 controllerIDMap.set("0e6f-011f", 8);
+controllerIDMap.set("e6f-11f", 8);
 
 //--END OF CONTROLLER IDs-------------------------------------
     
@@ -379,6 +390,10 @@ function unitRetract ( [x,y] ) {
   }
 };
 
+function meleeRound (x) {
+  return Math.round(steps*x)/steps;
+};
+
 function meleeAxesRescale ( [x,y], bool ) {
     let xnew = axisRescale (x, meleeOrig, bool);
     let ynew = axisRescale (y, meleeOrig, bool);
@@ -391,19 +406,14 @@ function meleeAxesRescale ( [x,y], bool ) {
         ynew2 = 0;
       }
     }
-    return [xnew2, ynew2];
+    return ([xnew2, ynew2].map(meleeRound));
 }
-
-function meleeRound (x) {
-  return Math.round(steps*x)/steps;
-};
-
 
 // this is the main input rescaling function
 // it scales raw input data to the data Melee uses for the simulation
 // number : controller ID, to rescale axes dependent on controller raw input
 // bool == false means no deadzone, bool == true means deadzone
-export function scaleToMeleeAxes ( x, y, number, bool, customCenterX, customCenterY ) {
+export function scaleToMeleeAxes ( x, y, number = 0, bool = false, customCenterX = 0, customCenterY = 0 ) {
     if (number === 0 || number == 4 || number === 5 || number === 7) { // gamecube controllers
          x = ( x-customCenterX+1)*255/2; // convert raw input to 0 -- 255 values in obvious way
          y = (-y+customCenterY+1)*255/2; // y incurs a sign flip
@@ -413,12 +423,12 @@ export function scaleToMeleeAxes ( x, y, number, bool, customCenterX, customCent
       [x, y] = scaleToGCAxes(x,y,number, customCenterX, customCenterY);
       //console.log("You are using GC controller simulation.");
     }
-    return (meleeAxesRescale ( [x,y], bool )).map(meleeRound);
+    return meleeAxesRescale ( [x,y], bool );
 };
 
 // scales -1 -- 1 data to the data Melee uses for the simulation
 // bool == false means no deadzone, bool == true means deadzone
 export function meleeRescale ( x, y, bool = false) {
     let [xnew, ynew] = scaleUnitToGCAxes (x, y);
-    return (meleeAxesRescale ( [xnew, ynew], bool)).map(meleeRound);
-}
+    return meleeAxesRescale ( [xnew, ynew], bool );
+};

@@ -6,6 +6,7 @@ import {player, setCookie, changeGamemode, ports, bg1, bg1 as fg1, layers, fg2 a
 import {sounds} from "main/sfx";
 import {twoPi} from "main/render";
 import {stickHoldEach, stickHold, increaseStick, resetStick} from "menus/menu";
+import {music} from "../main/sfx";
 /* eslint-disable */
 
 // sounds, music
@@ -17,6 +18,7 @@ export function audioMenuControls (i){
   let audioLevelMoveUp = false;
   let audioLevelMoveDown = false;
   if (player[i].inputs.b[0] && !player[i].inputs.b[1]){
+	fg1.textAlign = "left";
     sounds.menuBack.play();
     player[i].inputs.b[1] = true;
     setCookie("soundsLevel", masterVolume[0], 36500);
@@ -97,17 +99,19 @@ export function audioMenuControls (i){
       audioMenuSelected = 0;
     }
   } else if (audioLevelMoveUp) {
-    sounds.menuSelect.play();
     masterVolume[audioMenuSelected] += 0.1;
     if (masterVolume[audioMenuSelected] > 1) {
       masterVolume[audioMenuSelected] = 1;
-    }
+    } else {
+	  sounds.menuSelect.play();
+	}
   } else if (audioLevelMoveDown) {
-    sounds.menuSelect.play();
     masterVolume[audioMenuSelected] -= 0.1;
     if (masterVolume[audioMenuSelected] < 0) {
       masterVolume[audioMenuSelected] = 0;
-    }
+    } else { 
+	  sounds.menuSelect.play();
+	}
   }
   if (audioLevelMoveDown || audioLevelMoveUp) {
     if (audioMenuSelected == 0) {
@@ -141,6 +145,7 @@ export function drawAudioMenuInit (){
 
 export function drawAudioMenu (){
   clearScreen();
+  drawAudioMenuInit();
   bg2.lineWidth = 3;
   addShine(0.01);
   if (shine > 1.8){
@@ -164,9 +169,9 @@ export function drawAudioMenu (){
   for (var i = 0; i < 2; i++) {
     if (i == audioMenuSelected) {
       //ui.fillStyle = "rgba(255, 255, 255, 0.7)";
-      ui.fillStyle = "rgba(255, 255, 255, 0.3)";
+      ui.fillStyle = "rgba(255, 255, 255,0.3)";
     } else {
-      ui.fillStyle = "rgba(255, 255, 255, 0.1)";
+      ui.fillStyle = "rgba(255, 255, 255,0.1)";
       //ui.fillStyle = "rgba(0, 0, 0, 0.8)";
     }
     ui.beginPath();
@@ -175,7 +180,7 @@ export function drawAudioMenu (){
     ui.lineTo(1000, 350 + i * 250);
     ui.closePath();
     ui.fill();
-    if (i == 0) {
+    if (i == 0) {	
       var bgGrad = ui.createLinearGradient(200, 0, 1200, 0);
       bgGrad.addColorStop(0, "rgb(12, 75, 13)");
       bgGrad.addColorStop(1, "rgb(15, 75, 255)");

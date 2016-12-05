@@ -1,21 +1,23 @@
-import {player, cS, changeGamemode, setCookie, getCookie,  bg1,fg1,ui,bg2, layers, clearScreen, shine, setStage,
+import {player, cS, changeGamemode, setCookie, getCookie,  bg1,fg1,ui,bg2, layers, clearScreen, shine,
     addShine
     , setShine
-    , deepCopyObject
+,setCS
 } from "main/main";
 import {targetRecords,  startTargetGame, medalsEarned, targetPlayer, medalTimes, devRecords,
     setTargetStagePlaying
-} from "target/targetplay";
+} from "../target/targetplay";
 import {showingCode, stageTemp,  setShowingCode, resetStageTemp, setTargetBuilder,
     setEditingStage
     , setStageTemp
-} from "target/targetbuilder";
-import {sounds} from "main/sfx";
-import {Vec2D, Box2D} from "main/characters";
-import {twoPi} from "main/render";
-import {foxPic, puffPic, marthPic} from "menus/css";
-import {customTargetStages, targetStages, setCustomTargetStages} from "stages/stages";
-import {setCS} from "../main/main";
+} from "../target/targetbuilder";
+import {sounds,music} from "../main/sfx";
+import {twoPi} from "../main/render";
+import {foxPic, puffPic, marthPic} from "../menus/css";
+import {customTargetStages, setCustomTargetStages,setActiveStageTarget} from "stages/activeStage";
+import {deepCopyObject} from "../main/util/deepCopyObject";
+import {Box2D} from "../main/util/Box2D";
+import {Vec2D} from "../main/util/Vec2D";
+import {setActiveStageCustomTarget} from "./activeStage";
 /* eslint-disable */
 let text;
 export let targetSelected = 0;
@@ -26,10 +28,13 @@ export let targetPointerPos = [600,635];
 export function setTargetPointerPos(val){
   targetPointerPos = val;
 }
+const cXSize = 1200;
+const cYSize = 750;
 export function tssControls (i){
   if (!showingCode){
-    targetPointerPos[0] += player[i].inputs.lStickAxis[0].x*15;
-    targetPointerPos[1] += player[i].inputs.lStickAxis[0].y*-15;
+    targetPointerPos[0] = Math.max(0,Math.min(1200,targetPointerPos[0] + (player[i].inputs.lStickAxis[0].x*15)));
+    targetPointerPos[1] = Math.max(0,Math.min(750,targetPointerPos[1] + (player[i].inputs.lStickAxis[0].y*-15)));
+	
     if (targetPointerPos[1] >= 45 && targetPointerPos[1] <= 420){
       for (let j=0;j<Math.min(20,11+customTargetStages.length);j++){
         if (targetPointerPos[0] >= 50+Math.floor(j/5)*260+Math.floor(j/10)*65 && targetPointerPos[0] <= 300+Math.floor(j/5)*260+Math.floor(j/10)*65 && targetPointerPos[1] >= 110+(j%5)*60 && targetPointerPos[1] <= 160+(j%5)*60){
@@ -123,12 +128,13 @@ export function tssControls (i){
         }
         else {
           if (targetSelected > 9){
-            setStage(customTargetStages[targetSelected-10]);
+            setTargetStagePlaying(targetSelected);
+            setActiveStageCustomTarget(targetSelected-10);
           }
           else {
-            setStage(targetStages[targetSelected]);
+            setActiveStageTarget(targetSelected);
           }
-            setTargetStagePlaying( targetSelected);
+          //setActiveStageTarget( targetSelected);
           startTargetGame(i,false);
         }
       }

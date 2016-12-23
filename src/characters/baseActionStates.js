@@ -1783,7 +1783,7 @@ export const baseActionStates = {
         return true;
       }
       else if (player[p].inputs.lAnalog[0] < 0.3 && player[p].inputs.rAnalog[0] < 0.3){
-		console.log(player[p].actionState);
+		//console.log(player[p].actionState);
         player[p].phys.shielding = false;
         aS[cS[p]].GUARDOFF.init(p);
         return true;

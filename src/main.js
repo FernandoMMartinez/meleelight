@@ -5,23 +5,31 @@ window.$ = $;
 
 // Legacy files
 import "main/sfx.js";
+import "main/swordSwings.js";
+import "main/vfx.js";
+import "main/characters.js";
+import "main/player.js";
+import "main/render.js";
+import "main/ai2.js";
+import "main/resize.js";
+import "main/main.js";
+
 import "settings.js";
+
 import "characters/marth/ecbmarth.js";
 import "characters/puff/ecbpuff.js";
 import "characters/baseActionStates.js";
-import "main/swordSwings.js";
-import "main/vfx.js";
-import "physics/hitDetection.js";
-import "main/characters.js";
 import "characters/marth/marthAttributes.js";
 import "characters/puff/puffAttributes.js";
-import "physics/article.js";
-import "main/player.js";
-import "physics/actionStateShortcuts.js";
 import "characters/marth/marth.js";
 import "characters/puff/puff.js";
 import "characters/fox";
-import "main/render.js";
+
+import "physics/hitDetection.js";
+import "physics/article.js";
+import "physics/actionStateShortcuts.js";
+import "physics/physics.js";
+
 import "menus/startup.js";
 import "menus/startscreen.js";
 import "menus/menu.js";
@@ -31,13 +39,15 @@ import "menus/keytest.js";
 import "menus/keyboardmenu.js";
 import "menus/credits.js";
 import "menus/css.js";
+import "menus/stageselect.js";
+
 import "target/targetbuilder.js";
 import "target/targetplay.js";
+
 import "stages/targetselect.js";
 import "stages/stagerender.js";
-import "menus/stageselect.js";
-import "physics/physics.js";
-import "main/ai.js";
-import "main/resize.js";
 import "stages/vs-stages/vs-stages";
-import "main/main.js";
+
+
+
+

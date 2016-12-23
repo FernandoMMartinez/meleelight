@@ -10,7 +10,7 @@ import {music} from "../main/sfx";
 /* eslint-disable */
 
 // sounds, music
-export const masterVolume = [0.5,0.3];
+export const masterVolume = [0.5,0];
 const audioMenuNames = ["Sounds","Music"];
 let audioMenuSelected = 0;
 export function audioMenuControls (i){
@@ -222,4 +222,6 @@ export function getAudioCookies (){
     masterVolume[1] = Number(m);
     changeVolume(music, masterVolume[1], 1);
   }
+  masterVolume[1] = 0; //mute music for now
+  changeVolume(music, masterVolume[1], 1);
 }

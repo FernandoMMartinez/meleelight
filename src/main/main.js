@@ -23,7 +23,7 @@ import {
 import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "../stages/targetselect";
 import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "target/targetbuilder";
 import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "physics/article";
-import {runAI} from "main/ai";
+import {runAI, getPlayerData, getCount} from "main/ai2";
 import {physics} from "physics/physics";
 import $ from 'jquery';
 import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, meleeRescale, scaleToGCTrigger, custcent} from "main/input";
@@ -710,17 +710,17 @@ window.interpretInputs = function(i, active) {
     player[i].inputs.lAnalog[0] = lAnalog;
     player[i].inputs.rAnalog[0] = rAnalog;
     if (mType[i] == 10) {
-      player[i].inputs.s[0] = keys[keyMap.s[0]] || keys[keyMap.s[1]];
-      player[i].inputs.x[0] = keys[keyMap.x[0]] || keys[keyMap.x[1]];
-      player[i].inputs.a[0] = keys[keyMap.a[0]] || keys[keyMap.a[1]];
-      player[i].inputs.b[0] = keys[keyMap.b[0]] || keys[keyMap.b[1]];
-      player[i].inputs.y[0] = keys[keyMap.y[0]] || keys[keyMap.y[1]];
-      player[i].inputs.r[0] = keys[keyMap.r[0]] || keys[keyMap.r[1]];
-      player[i].inputs.l[0] = keys[keyMap.l[0]] || keys[keyMap.l[1]];
-      player[i].inputs.dpadleft[0] = keys[keyMap.dl[0]];
-      player[i].inputs.dpaddown[0] = keys[keyMap.dd[0]];
-      player[i].inputs.dpadright[0] = keys[keyMap.dr[0]];
-      player[i].inputs.dpadup[0] = keys[keyMap.du[0]];
+      player[i].inputs.s[0] = (keys[keyMap.s[0]] || keys[keyMap.s[1]])?true:false;
+      player[i].inputs.x[0] = (keys[keyMap.x[0]] || keys[keyMap.x[1]])?true:false;
+      player[i].inputs.a[0] = (keys[keyMap.a[0]] || keys[keyMap.a[1]])?true:false;
+      player[i].inputs.b[0] = (keys[keyMap.b[0]] || keys[keyMap.b[1]])?true:false;
+      player[i].inputs.y[0] = (keys[keyMap.y[0]] || keys[keyMap.y[1]])?true:false;
+      player[i].inputs.r[0] = (keys[keyMap.r[0]] || keys[keyMap.r[1]])?true:false;
+      player[i].inputs.l[0] = (keys[keyMap.l[0]] || keys[keyMap.l[1]])?true:false;
+      player[i].inputs.dpadleft[0] = (keys[keyMap.dl[0]])?true:false;
+      player[i].inputs.dpaddown[0] = (keys[keyMap.dd[0]])?true:false;
+      player[i].inputs.dpadright[0] = (keys[keyMap.dr[0]])?true:false;
+      player[i].inputs.dpadup[0] = (keys[keyMap.du[0]])?true:false;
     } else {
 
       player[i].inputs.s[0] = buttonData(gamepad,"s").pressed;
@@ -763,7 +763,7 @@ window.interpretInputs = function(i, active) {
 
     if (!frameByFrame) {
       if (mType[i] == 10) {
-        player[i].inputs.z[0] = keys[keyMap.z[0]] || keys[keyMap.z[1]];
+        player[i].inputs.z[0] = (keys[keyMap.z[0]] || keys[keyMap.z[1]])?true:false;
       } else {
         player[i].inputs.z[0] = buttonData(gamepad,"z").pressed;
       }
@@ -933,6 +933,10 @@ export function update (i){
     if (currentPlayers[i] != -1){
       if (playerType[i] == 0){
         interpretInputs(i,true);
+        if(i === 0){
+          getPlayerData(player[0]);
+        }
+        console.log(getCount());
       }
       else {
         if (player[i].actionState != "SLEEP"){

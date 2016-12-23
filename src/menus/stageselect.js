@@ -45,7 +45,7 @@ export function sssControls (i){
   } else if ((player[i].inputs.s[0] && !player[i].inputs.s[1]) || (player[i].inputs.a[0] && !player[i].inputs.a[1])) {
     sounds.menuForward.play();
     if (stageSelected == 4) {
-      stageSelected = Math.floor(Math.random() * 3.99);
+      stageSelected = 0; //Math.floor(Math.random() * 3.99);
     }
       setStageSelect(stageSelected);
     /*switch (stageSelected){

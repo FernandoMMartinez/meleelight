@@ -45,7 +45,7 @@ export const gameSettings = {
   turbo : 0,
   lCancelType : 0, // 0- normal | 1 - Auto | 2 - smash 64
   blastzoneWrapping : 0,
-  flashOnLCancel : 0,
+  flashOnLCancel : 1,
   dustLessPerfectWavedash : 0,
   phantomThreshold : 0.01,
   everyCharWallJump : 0, //0 - off | 1 - on

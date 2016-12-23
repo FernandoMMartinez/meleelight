@@ -81,7 +81,7 @@ export function gpdbutton ( gpd, gpdID, but ) { // gpd.buttons[n] but checking b
   }
   else {
     const output = gpd.buttons[number];
-    if ( output == null || output === undefined) {
+    if ( output === null || output === undefined) { //output == null
       return false;
     }
     else {

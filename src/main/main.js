@@ -23,7 +23,7 @@ import {
 import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "../stages/targetselect";
 import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "target/targetbuilder";
 import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "physics/article";
-import {runAI, getPlayerData, getCount} from "main/ai2";
+import {runAI, collectPlayerData, shouldCollectData} from "main/ai2";
 import {physics} from "physics/physics";
 import $ from 'jquery';
 import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, meleeRescale, scaleToGCTrigger, custcent} from "main/input";
@@ -933,10 +933,9 @@ export function update (i){
     if (currentPlayers[i] != -1){
       if (playerType[i] == 0){
         interpretInputs(i,true);
-        if(i === 0){
-          getPlayerData(player[0]);
+        if(i === 0 && shouldCollectData()){ //instruct AI to collect human data now
+          collectPlayerData();
         }
-        console.log(getCount());
       }
       else {
         if (player[i].actionState != "SLEEP"){

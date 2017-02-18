@@ -23,7 +23,7 @@ import {
 import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "../stages/targetselect";
 import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "target/targetbuilder";
 import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "physics/article";
-import {runAI, collectPlayerData, shouldCollectData} from "main/ai2";
+import {runAI, collectPlayerData, shouldCollectData} from "main/ai";
 import {physics} from "physics/physics";
 import $ from 'jquery';
 import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, meleeRescale, scaleToGCTrigger, custcent} from "main/input";
@@ -933,7 +933,7 @@ export function update (i){
     if (currentPlayers[i] != -1){
       if (playerType[i] == 0){
         interpretInputs(i,true);
-        if(i === 0 && shouldCollectData()){ //instruct AI to collect human data now
+        if(i === 0 && shouldCollectData()){ //instruct AI to collect human data from player 1.
           collectPlayerData();
         }
       }
@@ -1123,6 +1123,8 @@ export function gameTick (){
       dom.gamelogicHigh.innerHTML = Math.round(gamelogicTime[1]);
       dom.gamelogicLow.innerHTML = Math.round(gamelogicTime[2]);
       dom.gamelogicPeak.innerHTML = gamelogicTime[3];
+      dom.framerateCurrent.innerHTML = 0;
+      //add fps stuff here later
     }
   } else if (findingPlayers) {
     findPlayers();
@@ -1694,6 +1696,7 @@ export function cacheDom() {
     "renderHigh",
     "renderLow",
     "renderPeak",
+    "framerateCurrent"
   ];
 
   elementIds.forEach((id) => {

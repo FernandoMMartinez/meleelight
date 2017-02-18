@@ -3168,6 +3168,7 @@ puff.JUMPAERIAL1 = {
     player[p].actionState = "JUMPAERIAL1";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
+    player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.65;
     player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 0.5);
     player[p].phys.jumpsUsed++;
@@ -3437,6 +3438,7 @@ puff.AERIALTURN1 = {
     player[p].actionState = "AERIALTURN1";
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
+    player[p].phys.doubleJumped = true;
     player[p].phys.cVel.y = 1.65;
     player[p].phys.cVel.x = (player[p].inputs.lStickAxis[0].x * 0.5);
     player[p].phys.jumpsUsed++;

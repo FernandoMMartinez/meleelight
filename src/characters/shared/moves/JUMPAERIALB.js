@@ -17,6 +17,7 @@ export default {
     player[p].timer = 0;
     player[p].phys.fastfalled = false;
     player[p].phys.doubleJumped = true;
+    player[p].phys.jumpsUsed++;
 
     player[p].phys.cVel.y = player[p].charAttributes.fHopInitV * player[p].charAttributes.djMultiplier;
 

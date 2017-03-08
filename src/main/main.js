@@ -23,7 +23,7 @@ import {
 import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "../stages/targetselect";
 import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "target/targetbuilder";
 import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "physics/article";
-import {runAI, collectPlayerData, shouldCollectData} from "main/ai";
+import {runAI, collectPlayerData, shouldCollectData, resetAI} from "main/aiknn";
 import {physics} from "physics/physics";
 import $ from 'jquery';
 import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, meleeRescale, scaleToGCTrigger, custcent} from "main/input";
@@ -1304,7 +1304,7 @@ export function initializePlayers (i,target){
 
 export function startGame (){
   setVsStage(stageSelect);
-    setBackgroundType(Math.round(Math.random()));
+  setBackgroundType(Math.round(Math.random()));
   changeGamemode(3);
   resetVfxQueue();
   for (var n = 0; n < 4; n++) {
@@ -1312,6 +1312,9 @@ export function startGame (){
       initializePlayers(n, false);
       renderPlayer(n);
       player[n].inCSS = false;
+    }
+    if(playerType[n] === 1){ //if ai player(0 = human, 1 = ai), reset ai settings
+      resetAI();
     }
     if (versusMode) {
       player[n].stocks = 1;
@@ -1399,7 +1402,7 @@ export function endGame (){
 }
 
 export function finishGame (){
-    setEndTargetGame(false);
+  setEndTargetGame(false);
   gameEnd = true;
   playing = false;
   fg2.save();

@@ -169,8 +169,8 @@ export function physics (i){
     }
 
     player[i].prevActionState = player[i].actionState;
-    aS[cS[i]][player[i].actionState].main(i);
-
+    aS[cS[i]][player[i].actionState].main(i); //not working properly for some reason
+    
     if (player[i].shocked > 0) {
       player[i].shocked--;
       if (player[i].shocked % 5 == 0) {
@@ -205,9 +205,7 @@ export function physics (i){
           }
         }
       }
-
     }
-
     if (Math.abs(player[i].phys.kVel.x) > 0) {
       var oSign = Math.sign(player[i].phys.kVel.x);
       if (player[i].phys.grounded) {

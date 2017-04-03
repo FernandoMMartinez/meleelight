@@ -23,7 +23,7 @@ import {
 import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "../stages/targetselect";
 import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "target/targetbuilder";
 import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "physics/article";
-import {runAI, collectPlayerData, shouldCollectData, resetAI} from "main/aiknn";
+import {runAI, updateAI, resetAI} from "ai/ainn";
 import {physics} from "physics/physics";
 import $ from 'jquery';
 import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, meleeRescale, scaleToGCTrigger, custcent} from "main/input";
@@ -933,9 +933,6 @@ export function update (i){
     if (currentPlayers[i] != -1){
       if (playerType[i] == 0){
         interpretInputs(i,true);
-        if(i === 0 && shouldCollectData()){ //instruct AI to collect human data from player 1.
-          collectPlayerData();
-        }
       }
       else {
         if (player[i].actionState != "SLEEP"){
@@ -944,7 +941,7 @@ export function update (i){
       }
     }
   }
-  physics(i);
+  // physics(i);
 }
 
 let delta = 0;
@@ -1075,15 +1072,25 @@ export function gameTick (){
     //console.log(dt);
     lastUpdate = now;
 
-      resetHitQueue();
+    resetHitQueue();
     getActiveStage().movingPlatforms();
     destroyArticles();
     executeArticles();
-    for (var i = 0; i < 4; i++) {
+
+    for (var i = 0; i < 4; i++) { //gathers player and AI inputs only
       if (playerType[i] > -1) {
         update(i);
       }
     }
+    if (!starting){
+      updateAI();
+    }
+    for(var i = 0; i < 4; i++){ //seperate input gathering and physics calculations
+      if(playerType[i] > -1){
+        physics(i);
+      }
+    }
+
     checkPhantoms();
     for (var i = 0; i < 4; i++) {
       if (playerType[i] > -1) {
@@ -1157,7 +1164,9 @@ export function gameTick (){
     //console.log(".");
   }
   //console.log(performance.now() - beforeWaster);*/
-  setTimeout(gameTick, 16 - diff);
+  setTimeout(gameTick,(16-diff)<=0?0:(15-diff)); //setTimeout(gameTick, 16 - diff)
+  //remove 1 ms for game render
+  //doing the timeout in the ai function and setting this to zero is better. 
 }
 
 export function clearScreen (){
@@ -1655,6 +1664,7 @@ export function start (){
     $("#appsDropdown").hide();
   });
   resize();
+
 }
 window.start = start;
 

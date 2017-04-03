@@ -1785,7 +1785,6 @@ export const baseActionStates = {
         return true;
       }
       else if (player[p].inputs.lAnalog[0] < 0.3 && player[p].inputs.rAnalog[0] < 0.3){
-		//console.log(player[p].actionState);
         player[p].phys.shielding = false;
         aS[cS[p]].GUARDOFF.init(p);
         return true;
@@ -3444,7 +3443,7 @@ export const baseActionStates = {
   interrupt : function(p){
     if (player[p].timer > 2){
       aS[cS[p]].CAPTUREWAIT.init(p);
-      aS[cS[p]].CATCHWAIT.init(player[p].phys.grabbedBy);
+      aS[cS[p]].CATCHWAIT.init(player[p].phys.grabbedBy); //changes player[1] state in physics(0)
       drawVfx("tech",new Vec2D(player[p].phys.pos.x,player[p].phys.pos.y+10));
       return true;
     }

@@ -3,7 +3,7 @@
 import {
   inverseMatrix,
   multMatVect
-} from "main/linAlg";
+} from "ai/sBLAS";
 import {Vec2D} from "./util/Vec2D";
 
 export const button = {

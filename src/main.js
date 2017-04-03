@@ -10,7 +10,7 @@ import "main/vfx.js";
 import "main/characters.js";
 import "main/player.js";
 import "main/render.js";
-import "main/aiknn.js";
+// import "ai/aiknn.js";
 import "main/resize.js";
 import "main/main.js";
 

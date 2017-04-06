@@ -8,6 +8,8 @@ Play Stable Build: http://ikneedata.com/meleelight
 
 Join the discussion on Discord: https://discord.gg/qagFayt
 
+Nintendo GC Adapter windows driver here: http://m4sv.com/page/wii-u-gcn-usb-driver
+
 Smashboards Thread: https://smashboards.com/threads/melee-light-browser-based-melee-clone-play-the-beta.439646/
 
 

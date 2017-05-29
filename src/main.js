@@ -10,7 +10,6 @@ import "main/vfx.js";
 import "main/characters.js";
 import "main/player.js";
 import "main/render.js";
-// import "ai/aiknn.js";
 import "main/resize.js";
 import "main/main.js";
 
@@ -47,7 +46,5 @@ import "target/targetplay.js";
 import "stages/targetselect.js";
 import "stages/stagerender.js";
 import "stages/vs-stages/vs-stages";
-
-
 
 

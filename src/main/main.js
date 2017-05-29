@@ -949,6 +949,8 @@ let lastFrameTimeMs = 0;
 let lastUpdate = performance.now();
 
 export function gameTick (){
+  var t1 = +new Date();
+
   var start = performance.now();
   var diff = 0;
   if (gameMode == 0 || gameMode == 20) {
@@ -1146,6 +1148,7 @@ export function gameTick (){
       }
     }
   }
+  const t2 = +new Date();
   /*
 
   var beforeWaster = performance.now();
@@ -1164,7 +1167,7 @@ export function gameTick (){
     //console.log(".");
   }
   //console.log(performance.now() - beforeWaster);*/
-  setTimeout(gameTick,(16-diff)<=0?0:(15-diff)); //setTimeout(gameTick, 16 - diff)
+  setTimeout(gameTick,(15-(t2-t1))<=0?0:(15-(t2-t1))); //setTimeout(gameTick, 16 - diff)
   //remove 1 ms for game render
   //doing the timeout in the ai function and setting this to zero is better. 
 }

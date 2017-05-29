@@ -47,7 +47,7 @@ function createConfig(options) {
             {
               cacheId: 'meleelight',
               filename: 'service-worker.js',
-              maximumFileSizeToCacheInBytes: 4194304,
+              maximumFileSizeToCacheInBytes: 41943040,
               runtimeCaching: [{
                 handler: 'cacheFirst',
                 urlPattern: /.*/,
@@ -79,7 +79,7 @@ function createConfig(options) {
             {
               cacheId: 'meleelight',
               filename: 'service-worker.js',
-              maximumFileSizeToCacheInBytes: 4194304,
+              maximumFileSizeToCacheInBytes: 41943040,
               runtimeCaching: [{
                 handler: 'cacheFirst',
                 urlPattern: /.*/,
@@ -91,7 +91,7 @@ function createConfig(options) {
         new HappyPack({
           // loaders is the only required parameter:
           loaders: [ 'babel?presets[]=es2015' ],
-          threads:8
+          threads:4
 
         })
     );

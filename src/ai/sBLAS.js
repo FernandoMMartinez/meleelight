@@ -173,6 +173,18 @@ export function reshapeToMatrix(array,r,c){
   return retMat;
 }
 
+export function convertToFloat32Matrix(m){
+  const r = m.length;
+  const c = m[0].length;
+  const retMat = createMatrix(r,c);
+  for(let i = 0; i < r; i++){
+    for(let j = 0; j < c; j++){
+      retMat[i][j] = m[i][j];
+    }
+  }
+  return retMat;
+}
+
 export function printMatrix(m){
   const r = m.length;
   const c = m[0].length;

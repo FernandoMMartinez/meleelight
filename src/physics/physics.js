@@ -282,7 +282,7 @@ export function physics (i){
   // l CANCEL
   if (player[i].phys.lCancelTimer == 0 &&
     ((player[i].inputs.lAnalog[0] > 0 && player[i].inputs.lAnalog[1] == 0) ||
-     (player[i].inputs.rAnalog[0] > 0 && player[i].inputs.lAnalog[1] == 0) ||
+     (player[i].inputs.rAnalog[0] > 0 && player[i].inputs.lAnalog[1] == 0) || //TODO, change lAnalog to rAnalog
      (player[i].inputs.z[0] && !player[i].inputs.z[1]))) {
 
     // if smash 64 lcancel, increase window to 11 frames

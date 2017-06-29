@@ -23,7 +23,8 @@ import {
 import {tssControls, drawTSS, drawTSSInit, getTargetStageCookies} from "../stages/targetselect";
 import {targetBuilder, targetBuilderControls, renderTargetBuilder} from "target/targetbuilder";
 import {destroyArticles, executeArticles, articlesHitDetection, executeArticleHits, renderArticles, resetAArticles} from "physics/article";
-import {runAI, updateAI, resetAI} from "ai/ainn";
+import {runAI, resetAI} from "ai/ainn";
+import {collectData, dataStateReset} from "ai/collectdata"
 import {physics} from "physics/physics";
 import $ from 'jquery';
 import {controllerIDNumberFromGamepadID, controllerNameFromIDnumber, axis, button, gpdaxis, gpdbutton, keyboardMap, controllerMaps, scaleToUnitAxes, scaleToMeleeAxes, meleeRescale, scaleToGCTrigger, custcent} from "main/input";
@@ -54,10 +55,7 @@ let gameEnd = false;
 const attemptingControllerReset = [false,false,false,false];
 let keyboardOccupied = false;
 
-
-
 window.mType = [0, 0, 0, 0];
-
 
 export const mType = [0,0,0,0];
 
@@ -292,8 +290,12 @@ window.addEventListener("gamepadconnected", function(e) {
 });
 if (navigator.getGamepads) console.log(navigator.getGamepads());
 
-export function matchTimerTick (){
-  matchTimer -= 0.016667;
+export function matchTimerTick (direction){ //true = count up, false = count down
+  if(direction){
+    matchTimer += 0.016667;
+  }else{
+    matchTimer -= 0.016667;
+  }
 
   if (dom.matchMinutes && dom.matchSeconds) {
     var sec = (matchTimer % 60).toFixed(2);
@@ -945,12 +947,9 @@ export function update (i){
 }
 
 let delta = 0;
-let lastFrameTimeMs = 0;
+let lastStart = 0;
 let lastUpdate = performance.now();
-
 export function gameTick (){
-  var t1 = +new Date();
-
   var start = performance.now();
   var diff = 0;
   if (gameMode == 0 || gameMode == 20) {
@@ -994,7 +993,7 @@ export function gameTick (){
       }
     }
     executeHits();
-      resetHitQueue();
+    resetHitQueue();
     findPlayers();
   } else if (gameMode == 6) {
     // stage select
@@ -1084,8 +1083,8 @@ export function gameTick (){
         update(i);
       }
     }
-    if (!starting){
-      updateAI();
+    if(!starting){
+      collectData();
     }
     for(var i = 0; i < 4; i++){ //seperate input gathering and physics calculations
       if(playerType[i] > -1){
@@ -1103,8 +1102,10 @@ export function gameTick (){
     articlesHitDetection();
     executeArticleHits();
     if (!starting && !versusMode) {
-      matchTimerTick();
-    } else {
+      matchTimerTick(false);
+    }else if(!starting && versusMode){
+      matchTimerTick(true);
+    }else {
       startTimer -= 0.01666667;
       if (startTimer < 0) {
         starting = false;
@@ -1132,7 +1133,7 @@ export function gameTick (){
       dom.gamelogicHigh.innerHTML = Math.round(gamelogicTime[1]);
       dom.gamelogicLow.innerHTML = Math.round(gamelogicTime[2]);
       dom.gamelogicPeak.innerHTML = gamelogicTime[3];
-      dom.framerateCurrent.innerHTML = 0;
+      dom.framerateCurrent.innerHTML = Math.round(1000/(start-lastStart));;
       //add fps stuff here later
     }
   } else if (findingPlayers) {
@@ -1148,28 +1149,11 @@ export function gameTick (){
       }
     }
   }
-  const t2 = +new Date();
-  /*
-
-  var beforeWaster = performance.now();
-  // neeed to waste 0.666ms
-  var timeWasted = false;
-  var t = 0;
-  var o = performance.now();
-  while(!timeWasted){
-    var n = performance.now();
-    t += n - o;
-    //console.log(t);
-    if (t > 0.6666){
-      timeWasted = true;
-    }
-    o = n;
-    //console.log(".");
-  }
-  //console.log(performance.now() - beforeWaster);*/
-  setTimeout(gameTick,(15-(t2-t1))<=0?0:(15-(t2-t1))); //setTimeout(gameTick, 16 - diff)
-  //remove 1 ms for game render
-  //doing the timeout in the ai function and setting this to zero is better. 
+  lastStart = start;
+  let currentDelayEstimate = Math.max(0,16-(performance.now()-start));//(16-(end-start))<=0?0:(16-(end-start));
+  setTimeout(gameTick,currentDelayEstimate); //setTimeout(gameTick, 16 - diff)
+  //remove 1 ms for game render.
+  //doing the timeout in the ai function and setting this to zero is better.
 }
 
 export function clearScreen (){
@@ -1328,11 +1312,17 @@ export function startGame (){
     if(playerType[n] === 1){ //if ai player(0 = human, 1 = ai), reset ai settings
       resetAI();
     }
+    dataStateReset(); //reset the data collection states for the new game
     if (versusMode) {
       player[n].stocks = 1;
     }
   }
-  matchTimer = 480;
+  if(versusMode){
+    matchTimer = 0;
+  }else{
+    matchTimer = 480;
+  }
+  // matchTimer = 480;
   startTimer = 1.5;
   starting = true;
   music.menu.stop();

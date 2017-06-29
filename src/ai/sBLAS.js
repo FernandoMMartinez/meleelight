@@ -118,6 +118,46 @@ export function multiplyMatrices(m1,m2){
   return retMat;
 }
 
+export function applyFunctionToMatrix(mat, f){
+  const rows = mat.length; 
+  const cols = mat[0].length;
+  const retMat = createMatrix(rows,cols);
+  for(let i = 0; i < rows; i++){
+    for(let j = 0; j < cols; j++){
+      retMat[i][j] = f(mat[i][j]);
+    }  
+  }
+  return retMat;
+}
+
+export function addOnesColToMatrix(mat){
+  const rows = mat.length;
+  const cols = mat[0].length;
+  const retMat = createMatrix(rows,cols+1);
+  for(let i = 0; i < cols+1; i++){
+    for(let j = 0; j < rows; j++){
+      if(i === 0){
+        retMat[j][i] = 1;
+      }else{
+        retMat[j][i] = mat[j][i-1];
+      }
+    }
+  }
+  return retMat;
+}
+
+export function removeOnesColFromMatrix(mat){
+  const rows = mat.length;
+  const cols = mat[0].length;
+  const retMat = createMatrix(rows,cols-1);
+  for(let i = 1; i < cols; i++){
+    for(let j = 0; j < rows; j++){
+      retMat[j][i-1] = mat[j][i];
+    }
+  }
+  return retMat;
+}
+
 export function matrixSize(m){
   const matSize = new Float32Array(2);
   matSize[0] = m.length;
@@ -281,7 +321,7 @@ export function runBLASBenchmarks(){
 
 
 
-
+//legacy code
 // Computes the inverse of a 2x2 matrix.
 export function inverseMatrix([
   [x1, x2],

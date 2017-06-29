@@ -1,6 +1,5 @@
-import {player, playerType, cS} from "main/main";
-import {gameSettings} from "settings";
-import {activeStage} from "stages/activeStage";
+import {player} from "main/main";
+import {pushInputBuffer} from "ai/aiutil";
 
 const prevActionState = ["",""];
 const actionStateDuration = [0,0];
@@ -12,14 +11,12 @@ export function resetAI(){
   actionStateDuration[1] = 0;
 }
 
-export function updateAI(){
-  prevActionState[0] = player[0].actionState;
-  prevActionState[1] = player[1].actionState;
-}
-
 export function runAI(i){
   updateStateDurations();//always do first
   
+  
+
+  updatePrevActionStates();//always do last
 }
 
 function updateStateDurations(){
@@ -34,6 +31,17 @@ function updateStateDurations(){
     actionStateDuration[1] = actionStateDuration[1] + 1;
   }
 }
+
+function updatePrevActionStates(){
+  prevActionState[0] = player[0].actionState;
+  prevActionState[1] = player[1].actionState;
+}
+
+
+
+
+
+
 
 
 
